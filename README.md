@@ -1,5 +1,6 @@
 # lol-banner-generator-tiktok
 Fully vibecoded shit via GeminiAI that works more than once.
+<br>
 Use case : generate banner for my league of legends tiktoks using riot games API.
 
 # Instructions 1 
