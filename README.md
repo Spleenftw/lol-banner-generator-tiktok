@@ -15,7 +15,9 @@ docker run -d -p 3002:3002 --name lol-app lol-react-app
 ```
 
 # Access :
-Visit http://ip:3002 and generate your own banner for tiktoks.
+Visit http://ip:3002, enter your league of legends tag and generate your own banner for tiktoks.
+<img width="1363" height="1114" alt="image" src="https://github.com/user-attachments/assets/978a9935-491f-4ab9-bfb4-e702be020c35" />
+
 
 # Exemples :
 <img width="1400" height="340" alt="kda-vs-1769096860274" src="https://github.com/user-attachments/assets/85b022d8-b642-4e22-8089-a64e2bde78da" />
