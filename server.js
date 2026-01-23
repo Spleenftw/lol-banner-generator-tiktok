@@ -117,7 +117,7 @@ app.get('/api/riot/:gameName/:tagLine/:region', async (req, res) => {
         const myRankData = await getRank(puuid, region);
 
         // 3. MATCH HISTORY
-        const matUrl = `https://${cluster}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=0&count=5`;
+        const matUrl = `https://${cluster}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=0&count=20`;
         const matRes = await axios.get(matUrl, { headers: { "X-Riot-Token": RIOT_API_KEY } });
         
         // 4. DETAILS DES MATCHS
