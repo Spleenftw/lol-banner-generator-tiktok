@@ -116,7 +116,6 @@ export default function KDAOverlayGenerator() {
     setManualData(prev => {
         const myTier = (match.myRankTier && match.myRankTier !== 'undefined') ? match.myRankTier : prev.rankTier;
         const myDiv = (match.myRankDiv && match.myRankDiv !== 'undefined') ? match.myRankDiv : prev.rankDiv;
-        
         const oppTier = (match.oppRankTier && match.oppRankTier !== 'undefined') ? match.oppRankTier : prev.oppRankTier;
         const oppDiv = (match.oppRankDiv && match.oppRankDiv !== 'undefined') ? match.oppRankDiv : prev.oppRankDiv;
 
@@ -177,20 +176,16 @@ export default function KDAOverlayGenerator() {
             img.onload = () => resolve(img); img.onerror = () => resolve(null); img.src = src;
         });
 
-        // Fonction Dessin RANG (Texte + Gros + Centré)
+        // Fonction Dessin RANG
         const drawRankBadge = async (tier, div, x, y, align) => {
             if (!tier || tier === 'UNRANKED') return;
             const rankImg = await loadImage(getRankIcon(tier));
             if (rankImg) {
-                const size = 38; // Logo un poil plus gros
+                const size = 38;
                 ctx.drawImage(rankImg, x, y, size, size);
-                
-                // Police agrandie
                 ctx.font = 'bold 15px Arial'; 
                 ctx.fillStyle = '#C8AA6E';
                 ctx.textAlign = align === 'left' ? 'left' : 'right';
-                
-                // Espace augmenté entre logo et texte (10px)
                 const textX = align === 'left' ? x + size + 8 : x - 8;
                 const textY = y + 24; 
                 ctx.fillText(`${tier} ${div}`, textX, textY);
@@ -234,8 +229,6 @@ export default function KDAOverlayGenerator() {
                     ctx.drawImage(myRoleImg, rX + 2, rY + 2, rSize - 4, rSize - 4);
                 }
 
-                // DESSIN DU RANG (Ajusté vers le centre)
-                // On ajoute +15px de décalage vers la droite (pour la gauche) et vers la gauche (pour la droite)
                 const offset = 15; 
                 if (isLeft) {
                     await drawRankBadge(rTier, rDiv, mX + 10 + offset, mY + mSize + 10, 'left');
@@ -363,6 +356,28 @@ export default function KDAOverlayGenerator() {
                             <div><label className="text-[10px] text-red-400 uppercase font-bold mb-1 block">Adversaire</label><input className="bg-gray-800 w-full p-2 rounded text-sm border border-gray-600" value={manualData.oppChampion || ''} onChange={e=>handleManualChange('oppChampion', e.target.value)}/></div>
                         </div>
                         
+                        {/* --- DUOS AVEC ROLES MODIFIABLES --- */}
+                        <div className="grid grid-cols-2 gap-4 p-3 bg-gray-900/50 rounded-lg border border-gray-700/50">
+                            <div className="space-y-1">
+                                <label className="text-[10px] text-blue-300 uppercase font-bold block">Mon Duo</label>
+                                <div className="flex gap-1">
+                                    <input className="bg-gray-800 w-full p-2 rounded text-xs border border-gray-600" placeholder="Champion" value={manualData.teammate || ''} onChange={e=>handleManualChange('teammate', e.target.value)}/>
+                                    <select className="bg-gray-800 w-16 p-1 rounded text-xs border border-gray-600" value={manualData.teammateRole || ''} onChange={e=>handleManualChange('teammateRole', e.target.value)}>
+                                        <option value="">Aucun</option><option value="TOP">Top</option><option value="JUNGLE">Jgl</option><option value="MIDDLE">Mid</option><option value="BOTTOM">Bot</option><option value="UTILITY">Sup</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="space-y-1">
+                                <label className="text-[10px] text-red-300 uppercase font-bold block">Duo Adv.</label>
+                                <div className="flex gap-1">
+                                    <input className="bg-gray-800 w-full p-2 rounded text-xs border border-gray-600" placeholder="Champion" value={manualData.oppTeammate || ''} onChange={e=>handleManualChange('oppTeammate', e.target.value)}/>
+                                    <select className="bg-gray-800 w-16 p-1 rounded text-xs border border-gray-600" value={manualData.oppTeammateRole || ''} onChange={e=>handleManualChange('oppTeammateRole', e.target.value)}>
+                                        <option value="">Aucun</option><option value="TOP">Top</option><option value="JUNGLE">Jgl</option><option value="MIDDLE">Mid</option><option value="BOTTOM">Bot</option><option value="UTILITY">Sup</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
                         <div className="grid grid-cols-2 gap-4 p-3 bg-gray-900/50 rounded-lg border border-gray-700/50">
                             <div>
                                 <label className="text-[10px] text-yellow-500 uppercase font-bold mb-1 block">Mon Rang</label>
@@ -430,7 +445,6 @@ export default function KDAOverlayGenerator() {
                             <img src={getChampionIcon(manualData.champion)} className="absolute top-[47px] left-0 w-[75px] h-[75px] rounded-full border-[3px] border-[#C8AA6E] z-20 bg-black object-cover shadow-xl"/>
                             {manualData.role && <div className="absolute top-[98px] left-[0px] w-[24px] h-[24px] bg-[#111] border border-[#C8AA6E] z-30 flex items-center justify-center shadow-md"><img src={getRoleIcon(manualData.role)} className="w-[20px] h-[20px]"/></div>}
                             
-                            {/* RANG HTML - GAUCHE (Décalé vers la droite) */}
                             {manualData.rankTier && manualData.rankTier !== 'UNRANKED' && (
                                 <div className="absolute top-[135px] left-[20px] flex items-center gap-1">
                                     <img src={getRankIcon(manualData.rankTier)} className="w-[30px] h-[30px]"/>
@@ -462,7 +476,6 @@ export default function KDAOverlayGenerator() {
                                 </>
                             )}
 
-                            {/* RANG HTML - DROITE (Décalé vers la gauche) */}
                             {manualData.oppRankTier && manualData.oppRankTier !== 'UNRANKED' && (
                                 <div className="absolute top-[135px] right-[20px] flex items-center justify-end gap-1">
                                     <span className="text-[12px] font-bold text-[#C8AA6E] uppercase">{manualData.oppRankTier} {manualData.oppRankDiv}</span>
